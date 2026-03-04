@@ -3,179 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Lakhpoti BD - User App</title>
+    <title>Lakhpoti BD - Premium</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #0b0f1a; color: white; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        .tab-content { display: none; min-height: 80vh; }
-        .active-tab { display: block; animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card-bg { background: #161b2a; border: 1px solid #232a3d; }
-        .active-nav { color: #facc15 !important; }
-        .nav-item { transition: all 0.3s; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+        body { background: #0b0f1a; color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        .tab-content { display: none; animation: slideUp 0.4s ease-out; }
+        .active-tab { display: block; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .glass { background: rgba(22, 27, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gold-text { background: linear-gradient(to right, #facc15, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #64748b; }
+        .active-nav { color: #facc15; transform: translateY(-5px); }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-28">
 
-    <div class="p-4 flex justify-between items-center sticky top-0 bg-[#0b0f1a] z-50 border-b border-gray-800">
+    <div class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-gray-800">
         <div class="flex items-center gap-3">
-            <img id="u-pic" class="w-10 h-10 rounded-full border-2 border-yellow-500 shadow-lg" src="https://via.placeholder.com/100">
+            <div class="relative">
+                <img id="u-pic" class="w-12 h-12 rounded-full border-2 border-yellow-500 p-0.5 shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#0b0f1a]"></div>
+            </div>
             <div>
-                <p id="u-name" class="font-bold text-sm">Loading...</p>
-                <p class="text-[10px] text-yellow-500 font-mono italic">Premium Member ●</p>
+                <p id="u-name" class="font-bold text-sm tracking-tight">Loading...</p>
+                <p class="text-[10px] font-semibold text-yellow-500/80 uppercase tracking-widest">Premium Member</p>
             </div>
         </div>
-        <div class="bg-[#161b2a] px-3 py-1.5 rounded-full text-yellow-500 font-bold border border-yellow-500/30 text-sm">
-            ৳ <span id="top-bal">0.00</span>
+        <div class="bg-yellow-500/10 px-4 py-2 rounded-2xl border border-yellow-500/20 shadow-inner">
+            <p class="text-[9px] text-gray-400 uppercase text-center font-bold">ব্যালেন্স</p>
+            <p class="gold-text font-extrabold text-lg">৳ <span id="top-bal">0.00</span></p>
         </div>
     </div>
 
-    <div id="content-area" class="p-4">
+    <div class="p-4 max-w-md mx-auto">
         
-        <div id="home-tab" class="tab-content active-tab space-y-4">
-            <div class="card-bg p-6 rounded-3xl text-center relative overflow-hidden">
-                <p class="text-gray-400 text-xs uppercase tracking-widest">বর্তমান ব্যালেন্স</p>
-                <h1 class="text-5xl font-black text-yellow-500 my-3 tracking-tighter">৳ <span id="h-bal">0.00</span></h1>
-                <div class="flex gap-3 mt-4">
-                    <button onclick="switchTab('earn')" class="flex-1 bg-yellow-500 text-black font-bold py-3 rounded-xl shadow-lg active:scale-95 transition">আর্ন করুন</button>
-                    <button onclick="switchTab('wallet')" class="flex-1 bg-gray-800 py-3 rounded-xl font-bold active:scale-95 transition">উত্তোলন</button>
+        <div id="home-tab" class="tab-content active-tab space-y-5">
+            <div class="glass p-8 rounded-[35px] text-center relative overflow-hidden">
+                <div class="absolute -top-10 -left-10 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl"></div>
+                <p class="text-gray-400 text-xs font-medium uppercase tracking-[3px]">Total Earnings</p>
+                <h1 class="text-6xl font-black my-4 gold-text">৳ <span id="h-bal">0.00</span></h1>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="switchTab('earn')" class="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-extrabold py-4 rounded-2xl shadow-xl shadow-yellow-500/20 active:scale-95 transition">Earn Money</button>
+                    <button onclick="switchTab('wallet')" class="flex-1 bg-gray-800/50 font-bold py-4 rounded-2xl hover:bg-gray-700 transition">Withdraw</button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="card-bg p-4 rounded-2xl flex flex-col items-center justify-center border-b-2 border-blue-500">
-                    <i class="fas fa-eye text-blue-500 mb-2"></i>
-                    <p id="h-ads" class="text-xl font-bold">0</p>
-                    <p class="text-[10px] text-gray-400 uppercase">মোট এড দেখা</p>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass p-5 rounded-3xl border-b-4 border-blue-500/50">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="p-2 bg-blue-500/10 rounded-lg text-blue-500"><i class="fas fa-play"></i></div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Ads Watched</p>
+                    </div>
+                    <p id="h-ads" class="text-2xl font-black">0</p>
                 </div>
-                <div class="card-bg p-4 rounded-2xl flex flex-col items-center justify-center border-b-2 border-green-500">
-                    <i class="fas fa-users text-green-500 mb-2"></i>
-                    <p id="h-ref" class="text-xl font-bold">0</p>
-                    <p class="text-[10px] text-gray-400 uppercase">সফল রেফারেল</p>
+                <div class="glass p-5 rounded-3xl border-b-4 border-green-500/50">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="p-2 bg-green-500/10 rounded-lg text-green-500"><i class="fas fa-users"></i></div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">Referrals</p>
+                    </div>
+                    <p id="h-ref" class="text-2xl font-black">0</p>
                 </div>
             </div>
-            
-            <div class="card-bg p-4 rounded-2xl">
-                <p class="text-xs text-gray-400 mb-2 italic"><i class="fas fa-bullhorn text-yellow-500 mr-2"></i>নোটিশ বোর্ড:</p>
-                <p id="announcement" class="text-sm">প্রতি রেফারে ১০% কমিশন এবং আনলিমিটেড এড দেখে ইনকাম করুন!</p>
+
+            <div class="glass p-5 rounded-3xl">
+                <p class="text-xs text-yellow-500 font-bold mb-3 flex items-center gap-2"><i class="fas fa-link"></i> আপনার রেফারেল লিংক</p>
+                <div class="flex gap-2">
+                    <input id="ref-link" readonly value="Loading..." class="flex-1 bg-black/30 p-3 rounded-xl text-[10px] text-gray-300 outline-none border border-gray-800">
+                    <button onclick="copyRef()" class="bg-yellow-500 text-black px-4 rounded-xl font-bold text-xs">Copy</button>
+                </div>
             </div>
         </div>
 
         <div id="leaderboard-tab" class="tab-content space-y-4">
-            <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-black text-yellow-500 italic"><i class="fas fa-crown mr-2"></i>লিডারবোর্ড</h2>
-                <span class="text-[10px] bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded">টপ ২০ রেফারকারী</span>
-            </div>
-            <div id="lb-list" class="space-y-2">
-                <div class="text-center py-20 text-gray-500">
-                    <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
-                    <p>লোড হচ্ছে...</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="earn-tab" class="tab-content space-y-3">
-            <h2 class="text-xl font-bold text-yellow-500"><i class="fas fa-tasks mr-2"></i>টাস্ক সেন্টার</h2>
-            <div class="card-bg p-4 rounded-2xl flex justify-between items-center border-l-4 border-yellow-500">
+            <div class="flex justify-between items-end mb-6">
                 <div>
-                    <p class="font-bold">ভিডিও এড দেখুন</p>
-                    <p class="text-[10px] text-gray-400">প্রতি এড ০.৫০৳</p>
+                    <h2 class="text-3xl font-black gold-text italic">Leaderboard</h2>
+                    <p class="text-[10px] text-gray-400 font-bold tracking-tighter uppercase">Top 20 Referral Kings</p>
                 </div>
-                <button onclick="alert('Ad Loading...')" class="bg-yellow-500 text-black px-6 py-2 rounded-xl font-black text-xs shadow-md">প্লে এড</button>
+                <i class="fas fa-trophy text-4xl text-yellow-500 opacity-20"></i>
+            </div>
+            <div id="lb-list" class="space-y-3">
+                </div>
+        </div>
+
+        <div id="earn-tab" class="tab-content space-y-4">
+            <h2 class="text-2xl font-bold gold-text italic mb-4">Task Center</h2>
+            <div class="glass p-6 rounded-[2rem] flex justify-between items-center border-l-4 border-yellow-500">
+                <div>
+                    <p class="font-black text-lg">Daily Video Ads</p>
+                    <p class="text-xs text-green-500 font-bold">Reward: ৳ ০.৫০</p>
+                </div>
+                <button onclick="alert('Ad Loading...')" class="bg-yellow-500 text-black w-12 h-12 rounded-full flex items-center justify-center shadow-lg"><i class="fas fa-play ml-1"></i></button>
             </div>
         </div>
 
-        <div id="wallet-tab" class="tab-content">
-            <h2 class="text-xl font-bold text-yellow-500 mb-4">টাকা উত্তোলন</h2>
-            <div class="space-y-4">
-                <div class="card-bg p-4 rounded-2xl">
-                    <p class="text-xs text-gray-400 mb-2">পেমেন্ট পদ্ধতি</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="bg-pink-600 p-3 rounded-xl font-bold text-sm">বিকাশ</button>
-                        <button class="bg-orange-600 p-3 rounded-xl font-bold text-sm">নগদ</button>
+        <div id="wallet-tab" class="tab-content space-y-6">
+            <h2 class="text-2xl font-bold gold-text italic">Withdraw Funds</h2>
+            <div class="glass p-6 rounded-[2rem] space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-4 rounded-2xl border border-pink-500/30 bg-pink-500/5 text-center cursor-pointer active:scale-95 transition">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Bkash_logo.png" class="h-6 mx-auto mb-2 grayscale brightness-200">
+                        <p class="text-xs font-bold">bKash</p>
+                    </div>
+                    <div class="p-4 rounded-2xl border border-orange-500/30 bg-orange-500/5 text-center cursor-pointer active:scale-95 transition">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Nagad_Logo.svg/1200px-Nagad_Logo.svg.png" class="h-6 mx-auto mb-2 grayscale brightness-200">
+                        <p class="text-xs font-bold">Nagad</p>
                     </div>
                 </div>
-                <input type="number" placeholder="পরিমাণ" class="w-full bg-[#1c2237] p-4 rounded-2xl border border-gray-700 outline-none focus:border-yellow-500">
-                <button class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-bold shadow-xl">সাবমিট করুন</button>
+                <input type="number" placeholder="Enter Amount" class="w-full bg-black/40 p-5 rounded-2xl border border-gray-800 focus:border-yellow-500 outline-none transition font-bold">
+                <button class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-black py-5 rounded-2xl shadow-2xl">Confirm Withdrawal</button>
             </div>
         </div>
+
     </div>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-[#161b2a] border-t border-gray-800 px-2 py-3 flex justify-around items-center rounded-t-[30px] shadow-2xl z-50">
-        <button onclick="switchTab('home')" id="nav-home" class="nav-item flex flex-col items-center text-gray-500 active-nav">
-            <i class="fas fa-home text-xl"></i>
-            <span class="text-[10px] mt-1 font-bold">হোম</span>
-        </button>
-        <button onclick="switchTab('earn')" id="nav-earn" class="nav-item flex flex-col items-center text-gray-500">
-            <i class="fas fa-layer-group text-xl"></i>
-            <span class="text-[10px] mt-1 font-bold">আর্ন</span>
-        </button>
-        
-        <div class="relative -mt-12">
-            <div class="absolute inset-0 bg-yellow-500 blur-xl opacity-20 rounded-full scale-150"></div>
-            <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="relative bg-yellow-500 w-16 h-16 rounded-full border-[6px] border-[#0b0f1a] flex items-center justify-center text-black shadow-2xl active:scale-90 transition">
+    <div class="fixed bottom-6 left-4 right-4 z-50">
+        <div class="glass flex justify-around items-center p-4 rounded-[2.5rem] shadow-[0_15px_40px_rgba(0,0,0,0.8)] border border-white/5">
+            <button onclick="switchTab('home')" id="n-home" class="nav-btn flex flex-col items-center active-nav">
+                <i class="fas fa-grid-2 text-xl"></i>
+                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Home</span>
+            </button>
+            <button onclick="switchTab('earn')" id="n-earn" class="nav-btn flex flex-col items-center">
+                <i class="fas fa-rocket text-xl"></i>
+                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Earn</span>
+            </button>
+            
+            <button onclick="switchTab('leaderboard')" id="n-leaderboard" class="relative -mt-14 w-16 h-16 bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-black border-[6px] border-[#0b0f1a] shadow-[0_10px_20px_rgba(250,204,21,0.3)] active:scale-90 transition-transform">
                 <i class="fas fa-trophy text-2xl"></i>
             </button>
-        </div>
 
-        <button onclick="switchTab('wallet')" id="nav-wallet" class="nav-item flex flex-col items-center text-gray-500">
-            <i class="fas fa-wallet text-xl"></i>
-            <span class="text-[10px] mt-1 font-bold">ওয়ালেট</span>
-        </button>
-        <button onclick="switchTab('profile')" id="nav-profile" class="nav-item flex flex-col items-center text-gray-500">
-            <i class="fas fa-user-circle text-xl"></i>
-            <span class="text-[10px] mt-1 font-bold">প্রোফাইল</span>
-        </button>
+            <button onclick="switchTab('wallet')" id="n-wallet" class="nav-btn flex flex-col items-center">
+                <i class="fas fa-wallet text-xl"></i>
+                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Wallet</span>
+            </button>
+            <button onclick="switchTab('profile')" id="n-profile" class="nav-btn flex flex-col items-center">
+                <i class="fas fa-user-astronaut text-xl"></i>
+                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Profile</span>
+            </button>
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        tg.enableClosingConfirmation();
+        tg.headerColor = '#0b0f1a';
 
         const user = tg.initDataUnsafe.user;
         if(user) {
-            document.getElementById('u-name').innerText = user.first_name;
-            document.getElementById('u-pic').src = user.photo_url || 'https://ui-avatars.com/api/?name=' + user.first_name;
+            document.getElementById('u-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            document.getElementById('u-pic').src = user.photo_url || 'https://ui-avatars.com/api/?name=' + user.first_name + '&background=facc15&color=000';
+            document.getElementById('ref-link').value = "https://t.me/Lakhpoti_bot?start=" + user.id;
         }
 
-        function switchTab(tabId) {
+        function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
-            document.getElementById(tabId + '-tab').classList.add('active-tab');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
-            if(document.getElementById('nav-' + tabId)) document.getElementById('nav-' + tabId).classList.add('active-nav');
+            document.getElementById(id + '-tab').classList.add('active-tab');
             
-            if(tabId === 'leaderboard') fetchLeaderboard();
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
+            document.getElementById('n-' + id).classList.add('active-nav');
+
+            if(id === 'leaderboard') loadLB();
+            tg.HapticFeedback.impactOccurred('medium');
         }
 
-        async function fetchLeaderboard() {
-            const lbList = document.getElementById('lb-list');
-            // ডেমো ডাটা (ফায়ারবেস কানেক্ট হলে এখান থেকে অটো আপডেট হবে)
-            const demoUsers = [
-                {name: "Karim", refs: 145}, {name: "Rahat", refs: 120},
-                {name: "Abir", refs: 98}, {name: "Sajib", refs: 85},
-                {name: "Nahid", refs: 72}, {name: "Jahid", refs: 60}
+        function loadLB() {
+            const list = document.getElementById('lb-list');
+            list.innerHTML = `<div class="text-center py-20 text-gray-600"><i class="fas fa-circle-notch fa-spin text-3xl"></i></div>`;
+            
+            // Mock Data (Replace with real Firebase API later)
+            const topUsers = [
+                {name: "Karim Sheikh", refs: 450, bal: 5000},
+                {name: "Rahat", refs: 320, bal: 3500},
+                {name: "Sajib Ahmed", refs: 210, bal: 2200},
+                {name: "Nahid Hasan", refs: 180, bal: 1500},
+                {name: "Sumon", refs: 150, bal: 1200}
             ];
 
-            lbList.innerHTML = '';
-            demoUsers.forEach((u, i) => {
-                lbList.innerHTML += `
-                    <div class="card-bg p-4 rounded-2xl flex justify-between items-center border-l-2 ${i < 3 ? 'border-yellow-500' : 'border-transparent'}">
-                        <div class="flex items-center gap-4">
-                            <span class="text-lg font-black ${i === 0 ? 'text-yellow-500' : 'text-gray-500'}">#${i + 1}</span>
-                            <div>
-                                <p class="font-bold text-sm">${u.name} ${i === 0 ? '👑' : ''}</p>
-                                <p class="text-[10px] text-gray-500 uppercase">Verified User</p>
+            setTimeout(() => {
+                list.innerHTML = '';
+                topUsers.forEach((u, i) => {
+                    const isTop = i < 3;
+                    list.innerHTML += `
+                        <div class="glass p-4 rounded-[1.5rem] flex justify-between items-center ${isTop ? 'border-l-4 border-yellow-500' : ''}">
+                            <div class="flex items-center gap-4">
+                                <span class="font-black text-lg ${i === 0 ? 'text-yellow-500' : 'text-gray-600'} w-5">#${i+1}</span>
+                                <div class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center font-bold text-yellow-500">${u.name.charAt(0)}</div>
+                                <div>
+                                    <p class="font-bold text-sm text-gray-200">${u.name} ${i === 0 ? '👑' : ''}</p>
+                                    <p class="text-[9px] text-gray-500 font-bold tracking-widest uppercase">Rank: ${i === 0 ? 'King' : 'Warrior'}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="gold-text font-black">${u.refs}</p>
+                                <p class="text-[8px] text-gray-500 font-bold uppercase">Referrals</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-yellow-500 font-black">${u.refs}</p>
-                            <p class="text-[9px] text-gray-500 uppercase">Referrals</p>
-                        </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }, 500);
+        }
+
+        function copyRef() {
+            const link = document.getElementById('ref-link');
+            link.select();
+            document.execCommand('copy');
+            tg.showPopup({ message: "Referral link copied to clipboard!" });
         }
     </script>
 </body>
