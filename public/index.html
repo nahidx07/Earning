@@ -3,145 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Lakhpoti BD - Premium</title>
+    <title>Lakhpoti BD - Premium Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
-        body { background: #0b0f1a; color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
-        .tab-content { display: none; animation: slideUp 0.4s ease-out; }
+        
+        body { 
+            background: #0b0f1a; 
+            color: white; 
+            font-family: 'Poppins', sans-serif; 
+            overflow-x: hidden; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tab-content { display: none; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .active-tab { display: block; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .glass { background: rgba(22, 27, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .gold-text { background: linear-gradient(to right, #facc15, #eab308); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #64748b; }
-        .active-nav { color: #facc15; transform: translateY(-5px); }
+
+        @keyframes slideUp { 
+            from { transform: translateY(30px); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
+
+        .glass { 
+            background: rgba(22, 27, 42, 0.7); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+
+        .gold-text { 
+            background: linear-gradient(135deg, #facc15 0%, #a16207 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+
+        .nav-btn { color: #64748b; transition: all 0.3s; }
+        .active-nav { color: #facc15 !important; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
-<body class="pb-28">
+<body class="pb-32">
 
-    <div class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-gray-800">
+    <div class="glass sticky top-0 z-50 p-4 flex justify-between items-center border-b border-white/5">
         <div class="flex items-center gap-3">
             <div class="relative">
-                <img id="u-pic" class="w-12 h-12 rounded-full border-2 border-yellow-500 p-0.5 shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+                <img id="u-pic" class="w-11 h-11 rounded-full border-2 border-yellow-500 shadow-[0_0_15px_rgba(250,204,21,0.3)]" src="https://ui-avatars.com/api/?name=User&background=333&color=fff">
                 <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#0b0f1a]"></div>
             </div>
             <div>
                 <p id="u-name" class="font-bold text-sm tracking-tight">Loading...</p>
-                <p class="text-[10px] font-semibold text-yellow-500/80 uppercase tracking-widest">Premium Member</p>
+                <div class="flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></span>
+                    <p class="text-[9px] font-bold text-yellow-500/80 uppercase tracking-widest italic">Golden Member</p>
+                </div>
             </div>
         </div>
-        <div class="bg-yellow-500/10 px-4 py-2 rounded-2xl border border-yellow-500/20 shadow-inner">
-            <p class="text-[9px] text-gray-400 uppercase text-center font-bold">ব্যালেন্স</p>
-            <p class="gold-text font-extrabold text-lg">৳ <span id="top-bal">0.00</span></p>
+        <div class="glass px-4 py-2 rounded-2xl border border-yellow-500/20 text-center">
+            <p class="text-[8px] text-gray-400 uppercase font-black">Balance</p>
+            <p class="gold-text font-black text-lg leading-none mt-1">৳ <span id="top-bal">0.00</span></p>
         </div>
     </div>
 
     <div class="p-4 max-w-md mx-auto">
         
         <div id="home-tab" class="tab-content active-tab space-y-5">
-            <div class="glass p-8 rounded-[35px] text-center relative overflow-hidden">
-                <div class="absolute -top-10 -left-10 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl"></div>
-                <p class="text-gray-400 text-xs font-medium uppercase tracking-[3px]">Total Earnings</p>
-                <h1 class="text-6xl font-black my-4 gold-text">৳ <span id="h-bal">0.00</span></h1>
-                <div class="flex gap-4 mt-6">
-                    <button onclick="switchTab('earn')" class="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-extrabold py-4 rounded-2xl shadow-xl shadow-yellow-500/20 active:scale-95 transition">Earn Money</button>
-                    <button onclick="switchTab('wallet')" class="flex-1 bg-gray-800/50 font-bold py-4 rounded-2xl hover:bg-gray-700 transition">Withdraw</button>
+            <div class="glass p-8 rounded-[2.5rem] text-center relative overflow-hidden shadow-2xl">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-500/5 rounded-full blur-3xl"></div>
+                <p class="text-gray-400 text-[10px] font-bold uppercase tracking-[4px] mb-2">Total Earnings</p>
+                <h1 class="text-6xl font-black gold-text italic tracking-tighter">৳ <span id="h-bal">0.00</span></h1>
+                <div class="flex gap-4 mt-8">
+                    <button onclick="switchTab('earn')" class="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-black py-4 rounded-2xl shadow-xl shadow-yellow-600/20 active:scale-95 transition">Earn Now</button>
+                    <button onclick="switchTab('wallet')" class="flex-1 bg-white/5 font-bold py-4 rounded-2xl hover:bg-white/10 transition">Withdraw</button>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div class="glass p-5 rounded-3xl border-b-4 border-blue-500/50">
+                <div class="glass p-5 rounded-3xl border-b-4 border-blue-500/30">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="p-2 bg-blue-500/10 rounded-lg text-blue-500"><i class="fas fa-play"></i></div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase">Ads Watched</p>
+                        <div class="p-2 bg-blue-500/10 rounded-lg text-blue-400 text-xs"><i class="fas fa-video"></i></div>
+                        <p class="text-[9px] text-gray-500 font-black uppercase">Ads Watched</p>
                     </div>
                     <p id="h-ads" class="text-2xl font-black">0</p>
                 </div>
-                <div class="glass p-5 rounded-3xl border-b-4 border-green-500/50">
+                <div class="glass p-5 rounded-3xl border-b-4 border-green-500/30">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="p-2 bg-green-500/10 rounded-lg text-green-500"><i class="fas fa-users"></i></div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase">Referrals</p>
+                        <div class="p-2 bg-green-500/10 rounded-lg text-green-400 text-xs"><i class="fas fa-user-plus"></i></div>
+                        <p class="text-[9px] text-gray-500 font-black uppercase">Refers</p>
                     </div>
                     <p id="h-ref" class="text-2xl font-black">0</p>
                 </div>
             </div>
 
             <div class="glass p-5 rounded-3xl">
-                <p class="text-xs text-yellow-500 font-bold mb-3 flex items-center gap-2"><i class="fas fa-link"></i> আপনার রেফারেল লিংক</p>
-                <div class="flex gap-2">
-                    <input id="ref-link" readonly value="Loading..." class="flex-1 bg-black/30 p-3 rounded-xl text-[10px] text-gray-300 outline-none border border-gray-800">
-                    <button onclick="copyRef()" class="bg-yellow-500 text-black px-4 rounded-xl font-bold text-xs">Copy</button>
+                <p class="text-[10px] text-yellow-500 font-black mb-3 uppercase flex items-center gap-2">
+                    <i class="fas fa-gift animate-bounce"></i> Invite Friends & Earn 10%
+                </p>
+                <div class="flex gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/5">
+                    <input id="ref-link" readonly value="Generating link..." class="flex-1 bg-transparent px-3 text-[10px] text-gray-400 outline-none">
+                    <button onclick="copyRef()" class="bg-yellow-500 text-black px-5 py-2.5 rounded-xl font-black text-[10px] active:scale-90 transition">COPY</button>
                 </div>
             </div>
         </div>
 
         <div id="leaderboard-tab" class="tab-content space-y-4">
-            <div class="flex justify-between items-end mb-6">
+            <div class="flex justify-between items-center bg-yellow-500/10 p-5 rounded-3xl border border-yellow-500/20">
                 <div>
-                    <h2 class="text-3xl font-black gold-text italic">Leaderboard</h2>
-                    <p class="text-[10px] text-gray-400 font-bold tracking-tighter uppercase">Top 20 Referral Kings</p>
+                    <h2 class="text-2xl font-black gold-text italic">Ref Kings</h2>
+                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Top 20 Performers</p>
                 </div>
-                <i class="fas fa-trophy text-4xl text-yellow-500 opacity-20"></i>
+                <i class="fas fa-crown text-3xl text-yellow-500"></i>
             </div>
             <div id="lb-list" class="space-y-3">
                 </div>
         </div>
 
         <div id="earn-tab" class="tab-content space-y-4">
-            <h2 class="text-2xl font-bold gold-text italic mb-4">Task Center</h2>
+            <h2 class="text-xl font-black gold-text uppercase italic tracking-widest">Task Center</h2>
             <div class="glass p-6 rounded-[2rem] flex justify-between items-center border-l-4 border-yellow-500">
                 <div>
-                    <p class="font-black text-lg">Daily Video Ads</p>
-                    <p class="text-xs text-green-500 font-bold">Reward: ৳ ০.৫০</p>
+                    <p class="font-black text-gray-200">Watch Video Ad</p>
+                    <p class="text-[10px] text-green-500 font-bold italic">+ ৳ ০.৫০ Reward</p>
                 </div>
-                <button onclick="alert('Ad Loading...')" class="bg-yellow-500 text-black w-12 h-12 rounded-full flex items-center justify-center shadow-lg"><i class="fas fa-play ml-1"></i></button>
+                <button onclick="alert('Ad loading...')" class="bg-yellow-500 text-black w-12 h-12 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition">
+                    <i class="fas fa-play ml-1"></i>
+                </button>
             </div>
         </div>
 
         <div id="wallet-tab" class="tab-content space-y-6">
-            <h2 class="text-2xl font-bold gold-text italic">Withdraw Funds</h2>
-            <div class="glass p-6 rounded-[2rem] space-y-4">
+            <h2 class="text-xl font-black gold-text uppercase italic tracking-widest">Withdraw</h2>
+            <div class="glass p-6 rounded-[2.5rem] space-y-5">
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="p-4 rounded-2xl border border-pink-500/30 bg-pink-500/5 text-center cursor-pointer active:scale-95 transition">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Bkash_logo.png" class="h-6 mx-auto mb-2 grayscale brightness-200">
-                        <p class="text-xs font-bold">bKash</p>
+                    <div class="p-4 rounded-2xl border border-white/5 bg-white/5 text-center cursor-pointer hover:border-pink-500/50 transition">
+                        <p class="text-xs font-black text-pink-500">bKash</p>
                     </div>
-                    <div class="p-4 rounded-2xl border border-orange-500/30 bg-orange-500/5 text-center cursor-pointer active:scale-95 transition">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Nagad_Logo.svg/1200px-Nagad_Logo.svg.png" class="h-6 mx-auto mb-2 grayscale brightness-200">
-                        <p class="text-xs font-bold">Nagad</p>
+                    <div class="p-4 rounded-2xl border border-white/5 bg-white/5 text-center cursor-pointer hover:border-orange-500/50 transition">
+                        <p class="text-xs font-black text-orange-500">Nagad</p>
                     </div>
                 </div>
-                <input type="number" placeholder="Enter Amount" class="w-full bg-black/40 p-5 rounded-2xl border border-gray-800 focus:border-yellow-500 outline-none transition font-bold">
-                <button class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-black py-5 rounded-2xl shadow-2xl">Confirm Withdrawal</button>
+                <input type="number" placeholder="Enter Amount (Min. 50)" class="w-full bg-black/40 p-5 rounded-2xl border border-white/5 focus:border-yellow-500 outline-none font-bold text-sm">
+                <button class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-black py-5 rounded-2xl shadow-xl active:scale-95 transition">Submit Request</button>
+            </div>
+        </div>
+
+        <div id="profile-tab" class="tab-content space-y-6">
+            <div class="glass p-8 rounded-[3rem] text-center border-t-4 border-yellow-500">
+                <img id="p-u-pic" class="w-24 h-24 rounded-full border-4 border-[#0b0f1a] shadow-2xl mx-auto -mt-20">
+                <h2 id="p-u-name" class="text-2xl font-black mt-4 gold-text">User Name</h2>
+                <p id="p-u-id" class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">ID: 00000000</p>
+                
+                <div class="grid grid-cols-2 gap-3 mt-8">
+                    <div class="bg-black/30 p-4 rounded-2xl">
+                        <p class="text-[8px] text-gray-500 uppercase font-black">Status</p>
+                        <p class="text-xs font-bold text-green-500">Verified ✅</p>
+                    </div>
+                    <div class="bg-black/30 p-4 rounded-2xl">
+                        <p class="text-[8px] text-gray-500 uppercase font-black">Tier</p>
+                        <p class="text-xs font-bold text-yellow-500">Gold</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-3xl">
+                <p class="font-black text-xs uppercase text-gray-400 mb-4 tracking-widest">Transaction History</p>
+                <div class="text-center py-8">
+                    <i class="fas fa-ghost text-3xl text-gray-800 mb-3"></i>
+                    <p class="text-[10px] text-gray-600 font-bold uppercase">No records found</p>
+                </div>
             </div>
         </div>
 
     </div>
 
-    <div class="fixed bottom-6 left-4 right-4 z-50">
-        <div class="glass flex justify-around items-center p-4 rounded-[2.5rem] shadow-[0_15px_40px_rgba(0,0,0,0.8)] border border-white/5">
+    <div class="fixed bottom-6 left-5 right-5 z-[100]">
+        <div class="glass flex justify-around items-center p-4 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/10">
             <button onclick="switchTab('home')" id="n-home" class="nav-btn flex flex-col items-center active-nav">
-                <i class="fas fa-grid-2 text-xl"></i>
-                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Home</span>
+                <i class="fas fa-home-lg-alt text-xl"></i>
+                <span class="text-[8px] mt-1.5 font-black uppercase">Home</span>
             </button>
             <button onclick="switchTab('earn')" id="n-earn" class="nav-btn flex flex-col items-center">
-                <i class="fas fa-rocket text-xl"></i>
-                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Earn</span>
+                <i class="fas fa-coins text-xl"></i>
+                <span class="text-[8px] mt-1.5 font-black uppercase">Earn</span>
             </button>
             
-            <button onclick="switchTab('leaderboard')" id="n-leaderboard" class="relative -mt-14 w-16 h-16 bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-black border-[6px] border-[#0b0f1a] shadow-[0_10px_20px_rgba(250,204,21,0.3)] active:scale-90 transition-transform">
+            <button onclick="switchTab('leaderboard')" id="n-leaderboard" class="relative -mt-16 w-16 h-16 bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-black border-[6px] border-[#0b0f1a] shadow-2xl shadow-yellow-500/40 active:scale-90 transition">
                 <i class="fas fa-trophy text-2xl"></i>
             </button>
 
             <button onclick="switchTab('wallet')" id="n-wallet" class="nav-btn flex flex-col items-center">
                 <i class="fas fa-wallet text-xl"></i>
-                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Wallet</span>
+                <span class="text-[8px] mt-1.5 font-black uppercase">Wallet</span>
             </button>
             <button onclick="switchTab('profile')" id="n-profile" class="nav-btn flex flex-col items-center">
-                <i class="fas fa-user-astronaut text-xl"></i>
-                <span class="text-[9px] mt-1 font-black uppercase tracking-tighter">Profile</span>
+                <i class="fas fa-user-circle text-xl"></i>
+                <span class="text-[8px] mt-1.5 font-black uppercase">Profile</span>
             </button>
         </div>
     </div>
@@ -150,37 +208,47 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
-        tg.headerColor = '#0b0f1a';
 
+        // 1. Initial User Setup
         const user = tg.initDataUnsafe.user;
         if(user) {
-            document.getElementById('u-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            document.getElementById('u-pic').src = user.photo_url || 'https://ui-avatars.com/api/?name=' + user.first_name + '&background=facc15&color=000';
+            const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            const photo = user.photo_url || `https://ui-avatars.com/api/?name=${user.first_name}&background=facc15&color=000&bold=true`;
+            
+            document.getElementById('u-name').innerText = user.first_name;
+            document.getElementById('p-u-name').innerText = fullName;
+            document.getElementById('u-pic').src = photo;
+            document.getElementById('p-u-pic').src = photo;
+            document.getElementById('p-u-id').innerText = "ID: " + user.id;
             document.getElementById('ref-link').value = "https://t.me/Lakhpoti_bot?start=" + user.id;
         }
 
+        // 2. Tab Switch Logic
         function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
             document.getElementById(id + '-tab').classList.add('active-tab');
             
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
-            document.getElementById('n-' + id).classList.add('active-nav');
+            const activeNav = document.getElementById('n-' + id);
+            if(activeNav) activeNav.classList.add('active-nav');
 
-            if(id === 'leaderboard') loadLB();
+            if(id === 'leaderboard') fetchLB();
+            
             tg.HapticFeedback.impactOccurred('medium');
+            window.scrollTo(0, 0);
         }
 
-        function loadLB() {
+        // 3. Leaderboard Loader
+        function fetchLB() {
             const list = document.getElementById('lb-list');
-            list.innerHTML = `<div class="text-center py-20 text-gray-600"><i class="fas fa-circle-notch fa-spin text-3xl"></i></div>`;
+            list.innerHTML = `<div class="text-center py-20 text-gray-700 animate-pulse font-black uppercase text-xs tracking-widest">Syncing Data...</div>`;
             
-            // Mock Data (Replace with real Firebase API later)
+            // Simulation
             const topUsers = [
-                {name: "Karim Sheikh", refs: 450, bal: 5000},
-                {name: "Rahat", refs: 320, bal: 3500},
-                {name: "Sajib Ahmed", refs: 210, bal: 2200},
-                {name: "Nahid Hasan", refs: 180, bal: 1500},
-                {name: "Sumon", refs: 150, bal: 1200}
+                {name: "Nahid Hasan", refs: 520}, {name: "Rakib Ali", refs: 410},
+                {name: "Sajib Ahmed", refs: 320}, {name: "Tanvir", refs: 215},
+                {name: "Abir Sheikh", refs: 190}, {name: "Jahid", refs: 150},
+                {name: "Sumon", refs: 120}, {name: "Mehedi", refs: 98}
             ];
 
             setTimeout(() => {
@@ -188,30 +256,34 @@
                 topUsers.forEach((u, i) => {
                     const isTop = i < 3;
                     list.innerHTML += `
-                        <div class="glass p-4 rounded-[1.5rem] flex justify-between items-center ${isTop ? 'border-l-4 border-yellow-500' : ''}">
+                        <div class="glass p-4 rounded-2xl flex justify-between items-center transition active:scale-95 ${isTop ? 'border-l-4 border-yellow-500' : 'border-l-4 border-transparent'}">
                             <div class="flex items-center gap-4">
-                                <span class="font-black text-lg ${i === 0 ? 'text-yellow-500' : 'text-gray-600'} w-5">#${i+1}</span>
-                                <div class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center font-bold text-yellow-500">${u.name.charAt(0)}</div>
+                                <span class="font-black text-sm ${i === 0 ? 'text-yellow-500' : 'text-gray-600'} w-4">#${i+1}</span>
+                                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center font-bold text-yellow-500 border border-white/5 text-xs">${u.name.charAt(0)}</div>
                                 <div>
                                     <p class="font-bold text-sm text-gray-200">${u.name} ${i === 0 ? '👑' : ''}</p>
-                                    <p class="text-[9px] text-gray-500 font-bold tracking-widest uppercase">Rank: ${i === 0 ? 'King' : 'Warrior'}</p>
+                                    <p class="text-[8px] text-gray-500 font-black uppercase">verified</p>
                                 </div>
                             </div>
                             <div class="text-right">
                                 <p class="gold-text font-black">${u.refs}</p>
-                                <p class="text-[8px] text-gray-500 font-bold uppercase">Referrals</p>
+                                <p class="text-[8px] text-gray-600 font-bold uppercase">Refs</p>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
-            }, 500);
+            }, 600);
         }
 
+        // 4. Clipboard Copy
         function copyRef() {
             const link = document.getElementById('ref-link');
             link.select();
             document.execCommand('copy');
-            tg.showPopup({ message: "Referral link copied to clipboard!" });
+            tg.showPopup({
+                title: 'Success!',
+                message: 'Referral link copied to clipboard.',
+                buttons: [{type: 'ok'}]
+            });
         }
     </script>
 </body>
