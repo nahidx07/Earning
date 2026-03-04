@@ -1,7 +1,7 @@
 const { Telegraf } = require('telegraf');
 const admin = require('firebase-admin');
 
-// Firebase Admin Setup (Vercel Environment Variables থেকে আসবে)
+// ১. ফায়ারবেস অ্যাডমিন সেটআপ (Vercel Environment Variables থেকে ডাটা নেবে)
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
@@ -15,55 +15,91 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// ১. স্টার্ট কমান্ড ও রেফারেল সিস্টেম
+// ২. স্টার্ট কমান্ড এবং রেফারেল লজিক
 bot.start(async (ctx) => {
   const userId = ctx.from.id.toString();
-  const referrerId = ctx.startPayload; // লিংকের শেষের ID
+  const userName = ctx.from.first_name;
+  const referrerId = ctx.startPayload; // লিংকের শেষের আইডি (যদি থাকে)
 
-  const userRef = db.collection('users').doc(userId);
-  const userDoc = await userRef.get();
+  try {
+    const userRef = db.collection('users').doc(userId);
+    const userDoc = await userRef.get();
 
-  if (!userDoc.exists) {
-    // নতুন ইউজার তৈরি
-    await userRef.set({
-      id: userId,
-      name: ctx.from.first_name,
-      balance: 0,
-      refer_count: 0,
-      referred_by: referrerId || null,
-      joinedAt: admin.firestore.FieldValue.serverTimestamp()
+    if (!userDoc.exists) {
+      // নতুন ইউজার রেজিস্টার করা
+      await userRef.set({
+        id: userId,
+        name: userName,
+        balance: 0,
+        refer_count: 0,
+        referred_by: referrerId || null,
+        joinedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      // যদি রেফারেল লিংকে জয়েন করে থাকে
+      if (referrerId && referrerId !== userId) {
+        const refUserRef = db.collection('users').doc(referrerId);
+        const refUserDoc = await refUserRef.get();
+
+        if (refUserDoc.exists) {
+          await refUserRef.update({
+            balance: admin.firestore.FieldValue.increment(5), // প্রতি রেফারে ৫ টাকা
+            refer_count: admin.firestore.FieldValue.increment(1),
+          });
+
+          // রেফারারকে মেসেজ পাঠানো
+          await ctx.telegram.sendMessage(referrerId, `🎉 অভিনন্দন! ${userName} আপনার রেফারে জয়েন করেছে। আপনি ৫ টাকা বোনাস পেয়েছেন।`);
+        }
+      }
+    }
+
+    // বটের মেইন মেনু রিপ্লাই
+    await ctx.reply(`স্বাগতম ${userName}! 👋\nনিচের বাটন থেকে ইনকাম শুরু করুন।`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "💰 ওপেন মিনি অ্যাপ", web_app: { url: process.env.APP_URL } }],
+          [{ text: "📊 ব্যালেন্স চেক", callback_data: "check_balance" }],
+          [{ text: "🔗 রেফারেল লিংক", callback_data: "get_refer" }]
+        ]
+      }
     });
 
-    // রেফারারকে বোনাস দেওয়া
-    if (referrerId && referrerId !== userId) {
-      const refUser = db.collection('users').doc(referrerId);
-      await refUser.update({
-        balance: admin.firestore.FieldValue.increment(5), // ৫ টাকা বোনam
-        refer_count: admin.firestore.FieldValue.increment(1)
-      });
-      try {
-        await ctx.telegram.sendMessage(referrerId, `🎉 অভিনন্দন! কেউ আপনার লিংকে জয়েন করেছে। আপনি ৫ টাকা বোনাস পেয়েছেন।`);
-      } catch (e) { console.log("Referrer blocked bot"); }
-    }
+  } catch (error) {
+    console.error("Error in start command:", error);
   }
-
-  ctx.reply(`স্বাগতম ${ctx.from.first_name}! 💰\n\nএখান থেকে টাস্ক পূরণ করে ইনকাম করুন।\n\nআপনার রেফার লিংক:\nhttps://t.me/${ctx.botInfo.username}?start=${userId}`);
 });
 
-// ২. ব্যালেন্স চেক কমান্ড
-bot.command('balance', async (ctx) => {
-  const userDoc = await db.collection('users').doc(ctx.from.id.toString()).get();
-  const data = userDoc.data();
-  ctx.reply(`আপনার বর্তমান ব্যালেন্স: ${data.balance} টাকা\nমোট রেফার: ${data.refer_count} জন`);
+// ৩. বাটন ক্লিক হ্যান্ডলার (Inline Keyboard)
+bot.on('callback_query', async (ctx) => {
+  const userId = ctx.from.id.toString();
+  const userRef = db.collection('users').doc(userId);
+  const userDoc = await userRef.get();
+  const userData = userDoc.data();
+
+  if (ctx.callbackQuery.data === "check_balance") {
+    await ctx.answerCbQuery();
+    await ctx.reply(`👤 ইউজার: ${userData.name}\n💰 ব্যালেন্স: ${userData.balance} টাকা\n👥 মোট রেফার: ${userData.refer_count} জন`);
+  } 
+  
+  else if (ctx.callbackQuery.data === "get_refer") {
+    await ctx.answerCbQuery();
+    const botUser = await ctx.telegram.getMe();
+    const refLink = `https://t.me/${botUser.username}?start=${userId}`;
+    await ctx.reply(`🔗 আপনার রেফারেল লিংক:\n${refLink}\n\nবন্ধুদের ইনভাইট করে ৫ টাকা বোনাস পান!`);
+  }
 });
 
-// Vercel Webhook Handler
+// ৪. ভার্সেল এর জন্য এক্সপোর্ট (Serverless Function)
 module.exports = async (req, res) => {
-  try {
-    await bot.handleUpdate(req.body);
-    res.status(200).send('OK');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error');
+  if (req.method === 'POST') {
+    try {
+      await bot.handleUpdate(req.body);
+      res.status(200).send('OK');
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Webhook Error');
+    }
+  } else {
+    res.status(200).send('Bot is running...');
   }
 };
