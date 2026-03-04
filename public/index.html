@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earning Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; margin: 0; padding: 20px; }
+        .card { background: #2c2c2c; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .balance { font-size: 32px; color: #00d2ff; font-weight: bold; }
+        .btn { display: block; background: #0088cc; color: white; padding: 12px; margin: 10px 0; border-radius: 8px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; width: 100%; }
+        .task-list { text-align: left; }
+        .task-item { background: #3d3d3d; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h3>স্বাগতম, <span id="user-name">User</span></h3>
+        <p>আপনার বর্তমান ব্যালেন্স</p>
+        <div class="balance">৳ <span id="balance">0.00</span></div>
+    </div>
+
+    <div class="card task-list">
+        <h4>উপলব্ধ টাস্কসমূহ</h4>
+        <div class="task-item">
+            <span>চ্যানেল জয়েন করুন</span>
+            <button class="btn" style="width: 80px; margin: 0;" onclick="doTask(1)">৳ ৫</button>
+        </div>
+        <div class="task-item">
+            <span>বিজ্ঞাপন দেখুন (Ad)</span>
+            <button class="btn" style="width: 80px; margin: 0;" onclick="doTask(2)">৳ ২</button>
+        </div>
+    </div>
+
+    <button class="btn" onclick="openReferral()">রেফার করে ইনকাম করুন</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // অ্যাপটি ফুল স্ক্রিন করবে
+
+        // ইউজারের নাম সেট করা
+        document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
+
+        function doTask(id) {
+            alert("টাস্ক চেক করা হচ্ছে... দয়া করে অপেক্ষা করুন।");
+            // এখানে আপনি API কল করে ব্যালেন্স আপডেট করতে পারেন
+        }
+
+        function openReferral() {
+            const userId = tg.initDataUnsafe.user.id;
+            const refLink = `https://t.me/${tg.initDataUnsafe.receiver.username}?start=${userId}`;
+            alert("আপনার রেফার লিংক কপি করুন: " + refLink);
+        }
+    </script>
+</body>
+</html>
