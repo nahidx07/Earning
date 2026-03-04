@@ -62,7 +62,7 @@ bot.start(async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: "🚀 ওপেন মিনি অ্যাপ", web_app: { url: process.env.APP_URL } }],
-          [{ text: "📢 আমাদের চ্যানেল", url: "https://t.me/your_channel" }]
+          [{ text: "📢 আমাদের চ্যানেল", url: "https://t.me/lakhpotiOfficial" }]
         ]
       }
     });
